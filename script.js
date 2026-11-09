@@ -42,7 +42,7 @@ window.addEventListener("load", () => {
 
 
 // =============================================
-// PEMBUKAAN UNDANGAN + AUTO PLAY MUSIK
+// OPEN INVITATION + AUTO MUSIC
 // =============================================
 
 const openButton = document.getElementById("openInvitation");
@@ -53,22 +53,18 @@ const music = document.getElementById("weddingMusic");
 const musicToggle = document.getElementById("musicToggle");
 const musicLabel = document.getElementById("musicLabel");
 
+// Tombol buka undangan
 if (openButton && opening && mainContent) {
-
     openButton.addEventListener("click", async () => {
-
-        if (opening.classList.contains("opening-closed")) {
-            return;
-        }
 
         opening.classList.add("opening-closed");
         mainContent.classList.add("visible");
-
         document.body.classList.remove("locked");
 
-        // Putar musik setelah tombol undangan ditekan
+        // Putar musik setelah tamu menekan tombol
         if (music) {
             try {
+                music.volume = 0.7;
                 await music.play();
 
                 musicToggle?.classList.add("playing");
@@ -78,27 +74,45 @@ if (openButton && opening && mainContent) {
                 }
 
             } catch (error) {
-
                 console.error("Musik gagal diputar:", error);
-
-                if (musicLabel) {
-                    musicLabel.textContent = "MUSIC OFF";
-                }
-
             }
         }
 
         setTimeout(() => {
             mainContent.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
+                behavior: "smooth"
             });
         }, 300);
 
     });
-
 }
 
+// Tombol ON/OFF musik
+if (music && musicToggle) {
+    musicToggle.addEventListener("click", async () => {
+
+        if (music.paused) {
+            try {
+                await music.play();
+                musicToggle.classList.add("playing");
+
+                if (musicLabel) {
+                    musicLabel.textContent = "MUSIC ON";
+                }
+            } catch (error) {
+                console.error("Musik gagal diputar:", error);
+            }
+
+        } else {
+            music.pause();
+            musicToggle.classList.remove("playing");
+
+            if (musicLabel) {
+                musicLabel.textContent = "MUSIC OFF";
+            }
+        }
+    });
+}
 
 // =============================================
 // ANIMASI SCROLL REVEAL
@@ -180,43 +194,6 @@ setInterval(updateCountdown, 1000);
 
 
 
-// =============================================
-// MUSIK DAN TOMBOL MUSIC TOGGLE
-// =============================================
-
-if (music && musicToggle && musicLabel) {
-
-    musicToggle.addEventListener("click", async () => {
-
-        if (music.paused) {
-
-            try {
-
-                await music.play();
-
-                musicToggle.classList.add("playing");
-                musicLabel.textContent = "MUSIC ON";
-
-            } catch (error) {
-
-                console.error("Musik gagal diputar:", error);
-
-                musicLabel.textContent = "MUSIC OFF";
-
-            }
-
-        } else {
-
-            music.pause();
-
-            musicToggle.classList.remove("playing");
-            musicLabel.textContent = "MUSIC OFF";
-
-        }
-
-    });
-
-}
 
 
 // =============================================
