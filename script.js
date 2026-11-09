@@ -40,17 +40,22 @@ window.addEventListener("load", () => {
 });
 
 
+
 // =============================================
-// PEMBUKAAN UNDANGAN
+// PEMBUKAAN UNDANGAN + AUTO PLAY MUSIK
 // =============================================
 
 const openButton = document.getElementById("openInvitation");
 const opening = document.getElementById("opening");
 const mainContent = document.getElementById("mainContent");
 
+const music = document.getElementById("weddingMusic");
+const musicToggle = document.getElementById("musicToggle");
+const musicLabel = document.getElementById("musicLabel");
+
 if (openButton && opening && mainContent) {
 
-    openButton.addEventListener("click", () => {
+    openButton.addEventListener("click", async () => {
 
         if (opening.classList.contains("opening-closed")) {
             return;
@@ -60,6 +65,28 @@ if (openButton && opening && mainContent) {
         mainContent.classList.add("visible");
 
         document.body.classList.remove("locked");
+
+        // Putar musik setelah tombol undangan ditekan
+        if (music) {
+            try {
+                await music.play();
+
+                musicToggle?.classList.add("playing");
+
+                if (musicLabel) {
+                    musicLabel.textContent = "MUSIC ON";
+                }
+
+            } catch (error) {
+
+                console.error("Musik gagal diputar:", error);
+
+                if (musicLabel) {
+                    musicLabel.textContent = "MUSIC OFF";
+                }
+
+            }
+        }
 
         setTimeout(() => {
             mainContent.scrollIntoView({
@@ -152,13 +179,10 @@ updateCountdown();
 setInterval(updateCountdown, 1000);
 
 
-// =============================================
-// MUSIK UND TOMBOL MUSIC TOGGLE
-// =============================================
 
-const music = document.getElementById("weddingMusic");
-const musicToggle = document.getElementById("musicToggle");
-const musicLabel = document.getElementById("musicLabel");
+// =============================================
+// MUSIK DAN TOMBOL MUSIC TOGGLE
+// =============================================
 
 if (music && musicToggle && musicLabel) {
 
@@ -177,7 +201,7 @@ if (music && musicToggle && musicLabel) {
 
                 console.error("Musik gagal diputar:", error);
 
-                alert("Periksa kembali lokasi file musik di folder assets/music.");
+                musicLabel.textContent = "MUSIC OFF";
 
             }
 
